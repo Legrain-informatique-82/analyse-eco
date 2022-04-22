@@ -1,0 +1,5 @@
+213.186.38.48
+ks351102.kimsufi.com
+
+cd /donnees/Projet/Java/Eclipse/GestionCommerciale/AnalyseEconomique/
+scp -r report root@213.186.38.48:/var/tomcat/apache-tomcat-5.5.23/webapps/birt/

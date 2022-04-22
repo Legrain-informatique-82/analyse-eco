@@ -1,0 +1,22 @@
+================================================================
+RN_           = infos liasse
+BNS_          = infos compta : Solde (débit+crédit)
+BNSMC_        = infos compta : Mouvement Credit
+BNSMD_        = infos compta : Mouvement Débit
+BNNS_         = infos compta : Solde Report (N-1)
+ACQUISITION   = infos acquisition
+================================================================
+
+================================================================
+VARxx         = variables intermédiaires pour les calculs
+INTERxx       = variables intermédiaires pour les calculs
+================================================================
+
+================================================================
+RFxx          = Ratios financier
+Bxx           = Soldes intermédaires (N)
+Cxx           = Soldes intermédaires (N-1)
+Dxx           = Soldes intermédaires (N-2)
+BCxx          = Bilan compratif
+TFxx          = tableau financement
+================================================================

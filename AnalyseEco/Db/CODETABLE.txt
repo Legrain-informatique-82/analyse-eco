@@ -1,0 +1,581 @@
+CREATE DATABASE COGERE;
+
+CREATE TABLE logins(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+USER VARCHAR(45) NOT NULL,
+PASSWORD VARCHAR(45) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+-----------------------------------------------------
+
+CREATE TABLE dossiers(
+ID_DOSSIER INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NUM_DOSSIER VARCHAR(20) NOT NULL,
+CHEMIN_DOSSIER VARCHAR(60),
+NOM_ENTREPRISE VARCHAR(50),
+CONSULTATION TINYINT(4),
+ID_USER INT(10) UNSIGNED NOT NULL,
+PRIMARY KEY(ID_DOSSIER),
+CONSTRAINT fk1 FOREIGN KEY(ID_USER)REFERENCES logins(ID)
+)TYPE=MYISAM;
+
+-----------------------------------------------------
+
+CREATE TABLE contenu_dossier(
+ID_CD INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+ANNEE YEAR NOT NULL,
+ID_DOSSIER INT(10) UNSIGNED NOT NULL,
+PRIMARY KEY(ID_CD),
+CONSTRAINT fk2 FOREIGN KEY(ID_DOSSIER) REFERENCES dossiers(ID_DOSSIER)
+)TYPE=MYISAM;
+
+-----------------------------------------------------
+
+-- POUR LES FORMULES
+-----------------------------------------------------
+CREATE TABLE FORMULES_INTER1(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(200) NOT NULL,
+FORMULE VARCHAR(200),
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO FORMULES_INTER1(NOM_FORMULE,FORMULE,SYNBOLE) VALUES
+('VENTES DE MARCHANDISES','BNS_707*','B3'),
+('-ACHATS DE MARCHANDISES','BNS_607*','B4'),
+('Variation d\'inventaire des MARCHANDISES STOCKEES','BNS_6037*','B5'),
+('MARGE COMMERCIALE','B3-B4-B5','B7'),
+('CHIFFRE D\'AFFAIRE DE LA PRODUCTION','BNS_70*','B9'),
+('Variation d\'inventaire DE LA PRODUCTION STOCKEE','BNS_71*','B10'),
+('PRODUCTION IMMOBILISEE','BNS_721*+BNS_722*+BNS_724*','B11'),
+('PRODUCTION AUTOCONSOMMEE','BNS_726*','B12'),
+('INDELNITES ET SUBVENTIONS D\'EXPLOITATION','BNS_74*','B13'),
+('PRODUCTION DE L\'EXERCICE','B9+B10+B11+B12+B13','B15'),
+('-APPROVISIONNEMENTS','BNS_601*+BNS_602*+BNS_604*+BNS_607*+BNS_609*','B16'),
+('Variation inventaire APPROVISIONNEMENTS','BNS_603*','B17'),
+('-AUTRES ACHATS ET CHARGES EXTERNES','BNS_605*+BNS_606*+BNS_608*+BNS_61*+BNS_62*','B18'),
+('VALEUR AJOUTEE PRODIUT','B7+B15-B16-B17-B18','B20'),
+('-IMPOTS ET TAXES','BNS_63*','B21'),
+('-REMUNERATIONS DES ASSOCIES','BNS_6413*','B22'),
+('-MSA EXPOITANTS','BNS_646*','B23'),
+('-AUTRES CHARGES DE PERSONNEL','BNS_64*-BNS_6413*-BNS_646*','B24'),
+('EXCEDENT BRUT D\'EXPLOITATION','B20-B21-B22-B23-B24','B26'),
+('+Reprise sur provisions et transfert de charges','BNS_781*+BNS_791*+BNS_75*','B27'),
+('-Dotation aux amortissement et aux provisions','BNS_68*-BNS_686*-BNS_687*','B28'),
+('-Autres charges d\'exploitation','BNS_65*','B29'),
+('RESULTAT D\'EXPLOITATION','B26+B27-B28-B29','B31'),
+('+Produits financiers','BNS_76*+BNS_786*-BNS_796*','B32'),
+('-Charges financiere','BNS_66*+BNS_686*','B33'),
+('RESULTAT COURANT AVANT IMPOT','B31+B32-B33','B35'),
+('+Produits exceptionnels divers','BNS_771*+BNS_772*+BNS_778*+BNS_787*','B36'),
+('+Produits des cessions d\'element d\'actif','BNS_775*','B37'),
+('+Autres produits exceptionnels s/operations en capital','BNS_777*','B38'),
+('-Charges exceptionnelles diverses','BNS_67*-BNS_675*+BNS_687*','B39'),
+('-Valeurs nettes comptables des elements d\'actif cedes','BNS_675*','B40'),
+('-Impot dur les societes(I.S)','BNS_695*+BNS_697*','B42'),
+('RESULTAT DE L\'EXERCICE','B35+B36+B37+B38-B39-B40-B42','B44');
+
+CREATE TABLE FORMULES_INTER2(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(200) NOT NULL,
+FORMULE VARCHAR(200),
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO FORMULES_INTER2(NOM_FORMULE,FORMULE,SYNBOLE) VALUES
+('VENTES DE MARCHANDISES','BNNS_707*','C3'),
+('-ACHATS DE MARCHANDISES','BNNS_607*','C4'),
+('Variation d\'inventaire des MARCHANDISES STOCKEES','BNNS_6037*','C5'),
+('MARGE COMMERCIALE','C3-C4-C5','C7'),
+('CHIFFRE D\'AFFAIRE DE LA PRODUCTION','BNNS_70*','C9'),
+('Variation d\'inventaire DE LA PRODUCTION STOCKEE','BNNS_71*','C10'),
+('PRODUCTION IMMOBILISEE','BNNS_721*+BNNS_722*+BNNS_724*','C11'),
+('PRODUCTION AUTOCONSOMMEE','BNNS_726*','C12'),
+('INDELNITES ET SUBVENTIONS D\'EXPLOITATION','BNNS_74*','C13'),
+('PRODUCTION DE L\'EXERCICE','C9+C10+C11+C12+C13','C15'),
+('-APPROVISIONNEMENTS','BNNS_601*+BNNS_602*+BNNS_604*+BNNS_607*+BNNS_609*','C16'),
+('Variation inventaire APPROVISIONNEMENTS','BNNS_603*','C17'),
+('-AUTRES ACHATS ET CHARGES EXTERNES','BNNS_605*+BNNS_606*+BNNS_608*+BNNS_61*+BNNS_62*','C18'),
+('VALEUR AJOUTEE PRODIUT','C7+C15-C16-C17-C18','C20'),
+('-IMPOTS ET TAXES','BNNS_63*','C21'),
+('-REMUNERATIONS DES ASSOCIES','BNNS_6413*','C22'),
+('-MSA EXPOITANTS','BNNS_646*','C23'),
+('-AUTRES CHARGES DE PERSONNEL','BNNS_64*-BNNS_6413*-BNNS_646*','C24'),
+('EXCEDENT BRUT D\'EXPLOITATION','C20-C21-C22-C23-C24','C26'),
+('+Reprise sur provisions et transfert de charges','BNNS_781*+BNNS_791*+BNNS_75*','C27'),
+('-Dotation aux amortissement et aux provisions','BNNS_68*-BNNS_686*-BNNS_687*','C28'),
+('-Autres charges d\'exploitation','BNNS_65*','C29'),
+('RESULTAT D\'EXPLOITATION','C26+C27-C28-C29','C31'),
+('+Produits financiers','BNNS_76*+BNNS_786*-BNNS_796*','C32'),
+('-Charges financiere','BNNS_66*+BNNS_686*','C33'),
+('RESULTAT COURANT AVANT IMPOT','C31+C32-C33','C35'),
+('+Produits exceptionnels divers','BNNS_771*+BNNS_772*+BNNS_778*+BNNS_787*','C36'),
+('+Produits des cessions d\'element d\'actif','BNNS_775*','C37'),
+('+Autres produits exceptionnels s/operations en capital','BNNS_777*','C38'),
+('-Charges exceptionnelles diverses','BNNS_67*-BNNS_675*+BNNS_687*','C39'),
+('-Valeurs nettes comptables des elements d\'actif cedes','BNNS_675*','C40'),
+('-Impot dur les societes(I.S)','BNNS_695*+BNNS_697*','C42'),
+('RESULTAT DE L\'EXERCICE','C35+C36+C37+C38-C39-C40-C42','C44');
+
+CREATE TABLE FORMULES_INTER3(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(200) NOT NULL,
+FORMULE VARCHAR(200),
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+
+INSERT INTO FORMULES_INTER3(NOM_FORMULE,FORMULE,SYNBOLE) VALUES
+('VENTES DE MARCHANDISES','','D3'),
+('-ACHATS DE MARCHANDISES','','D4'),
+('Variation d\'inventaire des MARCHANDISES STOCKEES','','D5'),
+('MARGE COMMERCIALE','','D7'),
+('CHIFFRE D\'AFFAIRE DE LA PRODUCTION','','D9'),
+('Variation d\'inventaire DE LA PRODUCTION STOCKEE','','D10'),
+('PRODUCTION IMMOBILISEE','','D11'),
+('PRODUCTION AUTOCONSOMMEE','','D12'),
+('INDELNITES ET SUBVENTIONS D\'EXPLOITATION','','D13'),
+('PRODUCTION DE L\'EXERCICE','','D15'),
+('-APPROVISIONNEMENTS','','D16'),
+('Variation inventaire APPROVISIONNEMENTS','','D17'),
+('-AUTRES ACHATS ET CHARGES EXTERNES','','D18'),
+('VALEUR AJOUTEE PRODIUT','','D20'),
+('-IMPOTS ET TAXES','','D21'),
+('-REMUNERATIONS DES ASSOCIES','','D22'),
+('-MSA EXPOITANTS','','D23'),
+('-AUTRES CHARGES DE PERSONNEL','','D24'),
+('EXCEDENT BRUT D\'EXPLOITATION','','D26'),
+('+Reprise sur provisions et transfert de charges','','D27'),
+('-Dotation aux amortissement et aux provisions','','D28'),
+('-Autres charges d\'exploitation','','D29'),
+('RESULTAT D\'EXPLOITATION','','D31'),
+('+Produits financiers','','D32'),
+('-Charges financiere','','D33'),
+('RESULTAT COURANT AVANT IMPOT','','D35'),
+('+Produits exceptionnels divers','','D36'),
+('+Produits des cessions d\'element d\'actif','','D37'),
+('+Autres produits exceptionnels s/operations en capital','','D38'),
+('-Charges exceptionnelles diverses','','D39'),
+('-Valeurs nettes comptables des elements d\'actif cedes','','D40'),
+('-Impot dur les societes(I.S)','','D42'),
+('RESULTAT DE L\'EXERCICE','','D44');
+
+-----------------------------------------------------
+
+CREATE TABLE FORMULES_FLUX(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(200) NOT NULL,
+FORMULE VARCHAR(200) NOT NULL,
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+
+INSERT INTO FORMULES_FLUX(NOM_FORMULE,FORMULE,SYNBOLE)VALUES
+('chiffre d\'affaires','BNS_70*+BNS_75*','FL1'),
+('subventions','BNS_74*','FL2'),
+('VAR1','RN_ZCL_29+RN_ZCL_30+RN_ZCL_31+RN_ZCL_32-RN_ZCL_35-BNSD_452*-BNSD_453*-BNSD_454*-BNSD_455*-BNSD_456*-BNSD_457*-BNSD_458*+BNS_6714*-BNS_7714*','VAR1'),
+('VAR2','RN_A3_7_3+RN_A3_8_3+RN_A3_9_3+RN_A3_10_3-RN_A3_13_3-BNNSDR_452*-BNNSDR_453*-BNNSDR_454*-BNNSDR_455*-BNNSDR_456*-BNNSDR_457*-BNNSDR_458*+BNNS_6714*-BNNS_7714*','VAR2'),
+('INTER_FL3','VAR1-VAR2','INTER_FL3'),
+('Variation des creances si negative','INTER_FL3<0','FL3'),
+('INTER_FL4','BNS_1643*+BNS_168*-BNNS_1643*-BNNS_168*','INTER_FL4'),
+('VAR CT fin si>0','INTER_FL4>0','FL4'),
+('sous total ressources','FL1+FL2+FL3+FL4','FL5'),
+('Var creances','INTER_FL3>0','FL6'),
+('VAR CT fin si<0','INTER_FL4<0','FL7'),
+('sous total emplois','FL6+FL7','FL8'),
+('VAR3','RN_B1_17_1+RN_B1_18_1+RN_B1_19_1+RN_B1_20_1+RN_B1_21_1+RN_B1_22_1+RN_B1_23_1-BNSC_452*-BNSC_453*-BNSC_454*-BNSC_455*-BNSC_456*-BNSC_457*-BNSC_458*','VAR3'),
+('VAR4','RN_B1_17_2+RN_B1_18_2+RN_B1_19_2+RN_B1_20_2+RN_B1_21_2+RN_B1_22_2+RN_B1_23_2-BNNSCR_452*-BNNSCR_453*-BNNSCR_454*-BNNSCR_455*-BNNSCR_456*-BNNSCR_457*-BNNSCR_458*','VAR4'),
+('INTER_FL10','VAR3-VAR4','INTER_FL10'),
+('augmentation DCT','INTER_FL10>0','FL10'),
+('sous total','FL10','FL11'),
+('charges d\'exploitation','B16-B11+B18+B21+B23+B24+B29','FL12'),
+('diminution DCT','INTER_FL10<0','FL13'),
+('sous total','FL12+FL13','FL14'),
+('ETE','FL5-FL8+FL11-FL14','FL15'),
+('Emprunts nouveaux','BNSMC_161*+BNSMC_163*+BNSMC_164*+BNSMC_165*+BNSMC_166*+BNSMC_167*+BNSMC_1681*+BNSMC_1687*','FL16'),
+('Vente immob','BNS_775*','FL17'),
+('subvention d\'equipement','BNSMC_131*+BNSMC_138*','FL18'),
+('produits financiers','BNS_76*','FL19'),
+('sous totale','FL16+FL17+FL18+FL19','FL20'),
+('invertissments','ACQUISITION','FL21'),
+('autofinancement','FL21-FL20','FL24'),
+('annunite LMT','BNSMD_161*+BNSMD_163*+BNSMD_1641*+BNSMD_1642*+BNSMD_165*+BNSMD_166*+BNSMD_167*BNSMD_1681*+BNSMD_1687*+BNS_6611*+BNS_6612*-BNS_1688*+BNNS_1688*','FL25'),
+('VAR5','BNS_455*+BNS_456*-BNNS_455*-BNNS_456*-BNNS_120*-BNNS_129*+BNS_6413*+BNS_108*','VAR5'),
+('prelevement','VAR5>0','FL26'),
+('INTER_FL27','VAR5<0','INTER_FL27'),
+('apports','-INTER_FL27','FL27'),
+('FL28','BNS_695*+BNS_697*','FL28'),
+('FL29','FL15-FL24-FL25-FL26-FL28+FL27','FL29');
+
+-----------------------------------------------------
+CREATE TABLE FORMULES_BILANS(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(100) NOT NULL,
+FORMULE VARCHAR(200) NOT NULL,
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO FORMULES_BILANS(NOM_FORMULE,FORMULE,SYNBOLE)VALUES
+('Source Bilan Actif imprime cerfa','RN_ZCL_21','BC1'),
+('Source Bilan Actif imprime cerfa','RN_ZCL_23+RN_ZCL_24+RN_ZCL_25+RN_ZCL_26+RN_ZCL_27+RN_ZCL_28','BC2'),
+('Source Bilan Actif imprime cerfa','RN_ZCL_29+RN_ZCL_30+RN_ZCL_31+RN_ZCL_32+RN_ZCL_33+RN_ZCL_34+RN_ZCL_35+RN_ZCL_40+RN_ZCL_41','BC3'),
+('Source Bilan Passif imprime cerfa','RN_ZCL_46','BC4'),
+('Source Bilan Passif imprime cerfa','RN_B1_13_1+RN_B1_14_1','BC5'),
+('Source Bilan Passif imprime cerfa','RN_B1_15_1+RN_B1_16_1+RN_B1_17_1+RN_B1_18_1+RN_B1_19_1+RN_B1_20_1+RN_B1_21_1+RN_B1_22_1RN_B1_23_1','BC6'),
+('Source Bilan Actif imprime cerfa','RN_ZCL_22','BC7'),
+('Source Bilan Actif imprime cerfa','RN_A3_1_3+RN_A3_2_3+RN_A3_3_3+RN_A3_4_3+RN_A3_5_3+RN_A3_6_3','BC8'),
+('Source Bilan Actif imprime cerfa','RN_A3_7_3+RN_A3_8_3+RN_A3_9_3+RN_A3_10_3+RN_A3_11_3+RN_A3_12_3+RN_A3_13_3+RN_A4_1_2+RN_A4_2_2','BC9'),
+('Source Bilan Passif imprime cerfa','RN_ZCL_47','BC10'),
+('Source Bilan Passif imprime cerfa','RN_B1_13_2+RN_B1_14_2','BC11'),
+('Source Bilan Passif imprime cerfa','RN_B1_15_2+RN_B1_16_2+RN_B1_17_2+RN_B1_18_2+RN_B1_19_2+RN_B1_20_2+RN_B1_21_2+RN_B1_22_2+RN_B1_23_2','BC12'),
+('Report en annee suivant\(N+1\) de la case','BC7','BC13'),
+('Report en annee suivant\(N+1\) de la case','BC8','BC14'),
+('Report en annee suivant\(N+1\) de la case','BC9','BC15'),
+('Report en annee suivant\(N+1\) de la case','BC10','BC16'),
+('Report en annee suivant\(N+1\) de la case','BC11','BC17'),
+('Report en annee suivant\(N+1\) de la case','BC12','BC18'),
+('BC19','BC1+BC2+BC3','BC19'),
+('BC20','BC7+BC8+BC9','BC20'),
+('BC21','BC13+BC14+BC15','BC21'),
+('BC22','BC2+BC3','BC22'),
+('BC23','BC6','BC23'),
+('BC24','BC22-BC23','BC24'),
+('BC25','BC8+BC9','BC25'),
+('BC26','BC12','BC26'),
+('BC27','BC25-BC26','BC27'),
+('Report en annee suivant\(N+1\) de la case','BC14+BC15','BC28'),
+('Report en annee suivant\(N+1\) de la case','BC18+BC19','BC29'),
+('Report en annee suivant\(N+1\) de la case','BC28-BC29','BC30'),
+('BC31','BC24-BC27','BC31'),
+('BC32','BC27-BC30','BC32');
+-----------------------------------------------------
+CREATE TABLE RATIOS1(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(100) NOT NULL,
+FORMULE VARCHAR(200) NOT NULL,
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO RATIOS1(NOM_FORMULE,FORMULE,SYNBOLE)VALUES
+('INTER11','RN_ZCL_46+BNS_455?','INTER11'),
+('INTER12','RN_ZCL_46+RN_ZCL_48+RN_B1_13_1+RN_B1_14_1','INTER12'),
+('Autonomie financière','INTER11/INTER12*100','RF1'),
+('Liquidité réduite','BC3/BC6*100','RF2'),
+('Amortissement des immobilisations','RN_ZCL_20/RN_ZCL_19*100','RF3'),
+('VAR11A','RN_A3_8_1*360','VAR11A'),
+('VAR11B','RN_A3_9_1*360','VAR11B'),
+('VAR11','VAR11A+VAR11B','VAR11'),
+('VAR12','RN_ZCL_56+BNSMC_4457?','VAR12'),
+('Crédits clients','VAR11/VAR12','RF4'),
+('VAR13','BNS_401?+BNS_402?+BNS_403?+BNS_408?','VAR13'),
+('VAR14','BNS_60?-BNS_603?+BNS_61?+BNS_62?+BNSMD_44566?','VAR14'),
+('Crédits fournisseurs','VAR13/VAR14*360','RF5'),
+('Annuités/EBE','FL25/FL26','RF6'),
+('INTER13','RN_B1_8_1+BNS_6413?','INTER13'),
+('INTER14','RN_ZCL_46+BNS_455?','INTER14'),
+('Taux de rentabilité financière','INTER13/INTER14*100','RF7'),
+('INTER15','RN_ZCL_56+BNSMC_4457?','INTER15'),
+('Poids total des frais financiers','RN_C5_2_1/INTER15*100','RF8'),
+('INTER16','BNS_66?-BNS_6611?-BNS_6612?','INTER16'),
+('INTER17','RN_ZCL_56+BNSMC_4457?','INTER17'),
+('Cout de la trésorerie','INTER16/INTER17*100','RF9'),
+('VAR15A','BNS_3?/2','VAR15A'),
+('VAR15B','BNNS_3?/2','VAR15B'),
+('VAR15','VAR15A+VAR15B','VAR15'),
+('VAR16','BNNS_3?+BNS_60?-BNS_603?-BNS_605?-BNS_606?-BNS_3?','VAR16'),
+('Rotation des stocks','VAR15/VAR16*360','RF10');
+
+CREATE TABLE RATIOS2(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(100) NOT NULL,
+FORMULE VARCHAR(200) NOT NULL,
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO RATIOS2(NOM_FORMULE,FORMULE,SYNBOLE)VALUES
+('INTER21','RN_ZCL_47+BNNS_455?','INTER21'),
+('INTER22','RN_ZCL_47+RN_ZCL_49+RN_B1_13_2+RN_B1_14_2','INTER22'),
+('Autonomie financière','INTER21/INTER22*100','RF11'),
+('Liquidité réduite','BC9/BC12*100','RF12'),
+('INTER23','BNNS_28?','INTER23'),
+('INTER24','BNNS_2?-BNNS_28?','INTER24'),
+('Amortissement des immobilisations','INTER23/INTER24*100','RF13'),
+('VAR21A','RN_A3_8_3*360','VAR21A'),
+('VAR21B','RN_A3_9_3*360','VAR21B'),
+('VAR21','VAR21A+VAR21B','VAR21'),
+('VAR22','RN_ZCL_57+BNSMC_4457?','VAR22'),
+('Crédits clients','VAR21/VAR22','RF14'),
+('VAR23','BNNS_401?+BNNS_402?+BNNS_403?+BNNS_408?','VAR23'),
+('VAR24','BNNS_60?-BNNS_603?+BNNS_61?+BNNS_62?+BNSMD_44566?','VAR24'),
+('Crédits fournisseurs','VAR23/VAR24*360','RF15'),
+('Annuités/EBE','RF6','RF16'),
+('INTER25','RN_B1_8_2+BNNS_6413?','INTER25'),
+('INTER26','RN_ZCL_47+BNNS_455?','INTER26'),
+('Taux de rentabilité financière','INTER25/INTER26*100','RF17'),
+('INTER27','RN_ZCL_57+BNSMC_4457?','INTER27'),
+('Poids total des frais financiers','RN_C5_2_1/INTER5*100','RF18'),
+('INTER28','BNNS_66?-BNNS_6611?-BNNS_6612?','INTER28'),
+('INTER29','RN_ZCL_57+BNSMC_4457?','INTER29'),
+('Cout de la trésorerie','INTER28/INTER29*100','RF19'),
+('Rotation des stocks','RF10','RF20');
+
+-----------------------------------------------------
+CREATE TABLE ECORCHE_FINANCE(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+NOM_FORMULE VARCHAR(100) NOT NULL,
+FORMULE VARCHAR(200),
+SYNBOLE VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO ECORCHE_FINANCE(NOM_FORMULE,FORMULE,SYNBOLE)VALUES
+('TF1','','TF1'),
+('Resultat corrige','B44-BNS_777?-BNS_775?+BNS_675?','TF2'),
+('TF3','','TF3'),
+('Dotations','BNS_68?-BNS_78?-BNS_79?','TF4'),
+('Capacite autofinancement','TF2+TF4','TF25'),
+('Augmentation de capital','BNSMC_1013?+BNSMC_1014?+BNSMC_1015?+BNSMC_1018?','TF5'),
+('Diminution de capital','BNSMD_1013?+BNSMD_1014?+BNSMD_1015?+BNSMD_1018?','TF6'),
+('Investissements','FL21','TF7'),
+('Cession imobilisations','BNS_775?','TF8'),
+('Subv equipement percue','BNSMC_131?+BNSMC_138?','TF9'),
+('Emprunts LMT souscrits','FL16','TF10'),
+('Rembouresement emprunts LMT','BNSMD_161?+BNSMD_163?+BNSMD_1641?+BNSMD_1642?+BNSMD_165?+BNSMD_166?+BNSMD_167?+BNSMD_1681?+BNSMD_1687?','TF11'),
+('Prelevement prives','FL26','TF12'),
+('Apports prives','FL27','TF13'),
+('Total emplois','TF6+TF7+TF11+TF12','TF14'),
+('Total ressources','TF5+TF8+TF9+TF10+TF13','TF15'),
+('TF16','','TF16'),
+('Variatioin Fond de roulement','TF15-TF14+TF25','TF17'),
+('Variation stock N\/\(N-1\)','RN_C2_1_1+RN_C2_2_1-RN_C3_2_1','TF18'),
+('VAR1','RN_ZCL_29+RN_ZCL_30+RN_ZCL_31+RN_ZCL_32-RN_ZCL_35-BNSD_452*-BNSD_453*-BNSD_454*-BNSD_455*-BNSD_456*-BNSD_457*-BNSD_458*+BNS_6714*-BNS_7714*','VAR1'),
+('VAR2','RN_A3_7_3+RN_A3_8_3+RN_A3_9_3+RN_A3_10_3-RN_A3_13_3-BNNSDR_452*-BNNSDR_453*-BNNSDR_454*-BNNSDR_455*-BNNSDR_456*-BNNSDR_457*-BNNSDR_458*+BNNS_6714*-BNNS_7714*','VAR2'),
+('Var creances N\/\(N-1\)','VAR1-VAR2','TF19'),
+('Var dettes CT N\/\(N-1\)','','TF20'),
+('TF21','','TF21'),
+('Var besoin FR','TF18+TF19+TF20','TF23'),
+('Var treorerie','TF17-TF23','TF24');
+
+-----------------------------------------------------
+CREATE TABLE BILAN_ACTIF(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+LIBELLE VARCHAR(100) NOT NULL,
+BRUT VARCHAR(100),
+AMORT_PRO VARCHAR(100),
+NET3 VARCHAR(100) NOT NULL,
+NET4 VARCHAR(100) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO BILAN_ACTIF(LIBELLE,BRUT,AMORT_PRO,NET3,NET4)VALUES
+('Capital souscrot non appelé','RN_A2_1_1','NULL','RN_ZCL_1','RN_A2_1_2'),
+('Frais d\'établissement','RN_A2_2_1','RN_A2_2_2','RN_ZCL_2','RN_A2_2_3'),
+('Autres immobilisations incorporelles','RN_A2_3_1','RN_A2_3_2','RN_ZCL_3','RN_A2_3_3'),
+('Avances et comptes','RN_A2_4_1','RN_A2_4_2','RN_ZCL_4','RN_A2_4_3'),
+('Terrains','RN_A2_5_1','RN_A2_5_2','RN_ZCL_5','RN_A2_5_3'),
+('Aménagements fonciers','RN_A2_6_1','RN_A2_6_2','RN_ZCL_6','RN_A2_6_3'),
+('Amélioration du fonds','RN_A2_7_1','RN_A2_7_2','RN_ZCL_7','RN_A2_7_3'),
+('Constructions','RN_A2_8_1','RN_A2_8_2','RN_ZCL_8','RN_A2_8_3'),
+('Installation technique\,matériel et outillage','RN_A2_9_1','RN_A2_9_2','RN_ZCL_9','RN_A2_9_3'),
+('Autre immobilisations corporelles','RN_A2_10_1','RN_A2_10_2','RN_ZCL_10','RN_A2_10_3'),
+('Animaux reproducteurs','RN_A2_11_1','RN_A2_11_2','RN_ZCL_11','RN_A2_11_3'),
+('Animaux de service','RN_A2_12_1','RN_A2_12_2','RN_ZCL_12','RN_A2_12_3'),
+('Plantation pérennes et autres végétaux immobilisés','RN_A2_13_1','RN_A2_13_2','RN_ZCL_13','RN_A2_13_3'),
+('Immobilisations corporelles en cours','RN_A2_14_1','RN_A2_14_2','RN_ZCL_14','RN_A2_14_3'),
+('Avances et acomptes','RN_A2_15_1','RN_A2_15_2','RN_ZCL_15','RN_A2_15_3'),
+('Participation et créances rattachées','RN_A2_16_1','RN_A2_16_2','RN_ZCL_16','RN_A2_16_3'),
+('Prêts','RN_A2_17_1','RN_A2_17_2','RN_ZCL_17','RN_A2_17_3'),
+('Autres immobilisations financières','RN_A2_18_1','RN_A2_18_2','RN_ZCL_18','RN_A2_18_3'),
+('Total','RN_ZCL_19','RN_ZCL_20','RN_ZCL_21','RN_ZCL_22'),
+('Approvisionnement et marchandises','RN_A3_1_1','RN_A3_1_2','RN_ZCL_23','RN_A3_1_3'),
+('Animaux et végétaux en terre\(cycle long\)','RN_A3_2_1','RN_A3_2_2','RN_ZCL_24','RN_A3_2_3'),
+('EN cours de production de biens et services\(cycle long\)','RN_A3_3_1','RN_A3_3_2','RN_ZCL_25','RN_A3_3_3'),
+('Animaux et végétaux en terre\(cycle court\)','RN_A3_4_1','RN_A3_4_2','RN_ZCL_26','RN_A3_4_3'),
+('EN cours de production de biens et services\(cycle court\)','RN_A3_5_1','RN_A3_5_2','RN_ZCL_27','RN_A3_5_3'),
+('Produits intermèdiaires et finis','RN_A3_6_1','RN_A3_6_2','RN_ZCL_28','RN_A3_6_3'),
+('Avances et acomptes versés sur commande','RN_A3_7_1','RN_A3_7_2','RN_ZCL_29','RN_A3_7_3'),
+('Clients et comptes rattachés\(2\)','RN_A3_8_1','RN_A3_8_2','RN_ZCL_30','RN_A3_8_3'),
+('Autre clients et comptes rattachés\(convention\)\(2\)','RN_A3_9_1','RN_A3_9_2','RN_ZCL_31','RN_A3_9_3'),
+('Autre créances\(2\)','RN_A3_10_1','RN_A3_10_2','RN_ZCL_32','RN_A3_10_3'),
+('Valeurs mobilières de placement','RN_A3_11_1','RN_A3_11_2','RN_ZCL_33','RN_A3_11_3'),
+('Disponibilité','RN_A3_12_1','RN_A3_12_2','RN_ZCL_34','RN_A3_12_3'),
+('Charges constatées d\'avance\(2\)','RN_A3_13_1','RN_A3_13_2','RN_ZCL_35','RN_A3_13_3'),
+('Total','RN_ZCL_36','RN_ZCL_37','RN_ZCL_38','RN_ZCL_39'),
+('Frais d\'émission d\'emprunt à étaler','RN_A4_1_1','','RN_ZCL_40','RN_A4_1_2'),
+('Ecarts de conversion Actif','RN_A4_2_1','','RN_ZCL_41','RN_A4_2_2'),
+('Total Général','RN_ZCL_42','RN_ZCL_43','RN_ZCL_44','RN_ZCL_45'),
+('Renvois:','\(1\)part à mois d\'un an des immobilisations financieres nettes :','RN_A5_1_1','\(2\)Part à plus d\'un an:','RN_A5_1_2');
+
+-----------------------------------------------------------------------
+
+CREATE TABLE BILAN_PASSIF(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+LIBELLE1 VARCHAR(100) NOT NULL,
+LIBELLE2 VARCHAR(20),
+Exercice_N VARCHAR(20),
+Exercice_N_1 VARCHAR(20),
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO BILAN_PASSIF(LIBELLE1,LIBELLE2,Exercice_N,Exercice_N_1)VALUES
+('Capital individuel ou social\(dont verse\)','RN_B1_1_3','RN_B1_1_1','RN_B1_1_2'),
+('Primes d\emission\,de fusion\,d\'apport','','RN_B1_2_1','RN_B1_2_2'),
+('Ecarts de reevaluation\(1\)','','RN_B1_3_1','RN_B1_3_2'),
+('Reserves statutaires ou contratuelle','','RN_B1_4_1','RN_B1_4_2'),
+('Reserves reglementees','','RN_B1_5_1','RN_B1_5_2'),
+('Autre reserves','','RN_B1_6_1','RN_B1_6_2'),
+('Report a nouveau','','RN_B1_7_1','RN_B1_7_2'),
+('RESULTAT DE L\'EXERCICE\(benefice ou pert\)','','RN_B1_8_1','RN_B1_8_2'),
+('Subventions d\'investissement','','RN_B1_9_1','RN_B1_9_2'),
+('Provisions reglementees','','RN_B1_10_1','RN_B1_10_2'),
+('Total\(I\)','','RN_ZCL_46','RN_ZCL_47'),
+('Provisions pour risques','','RN_B1_11_1','RN_B1_11_2'),
+('Provisions pour charges','','RN_B1_12_1','RN_B1_12_2'),
+('Total\(II\)','','RN_ZCL_48','RN_ZCL_49'),
+('Emprunts et dettes aupres des etablissements de credit','','RN_B1_13_1','RN_B1_13_2'),
+('Emprunts fonciers','','RN_B1_14_1','RN_B1_14_2'),
+('Concours bancaires courants et decouverts bancaires','','RN_B1_15_1','RN_B1_15_2'),
+('Autres dettes financieres','','RN_B1_16_1','RN_B1_16_2'),
+('Avances et acomptes recus sur commandes en cours','','RN_B1_17_1','RN_B1_17_2'),
+('Dettes fournisseurs et comptes rattaches','','RN_B1_18_1','RN_B1_18_2'),
+('Dettes autres fournisseurs et comptes rattache\(conventions de compt-courant\)','','RN_B1_19_1','RN_B1_19_2'),
+('Dettes fiscals et socials','','RN_B1_20_1','RN_B1_20_2'),
+('Dettes sur immobilisations et comptes rattaches','','RN_B1_21_1','RN_B1_21_2'),
+('Autres dettes','','RN_B1_22_1','RN_B1_22_2'),
+('Produits constates d\'avance','','RN_B1_23_1','RN_B1_23_2'),
+('Toatl\(III\)','','RN_ZCL_50','RN_ZCL_51'),
+('Ecarts de conversion Passif\(IV\)','','RN_B1_24_1','RN_B1_24_2'),
+('TOTAL GENERAL\(I A IV\)','','RN_ZCL_52','RN_ZCL_53'),
+('Reserve special de reevaluation\(1959\)','','RN_B1_25_1','RN_B1_25_2'),
+('Ecart de reevaluation','','RN_B1_26_1','RN_B1_26_2'),
+('Reserve de reevaluation\(1976\)','','RN_B1_27_1','RN_B1_27_2'),
+('Dettes et produits constates d\'avance a moins d\'un an','','RN_B1_28_1','RN_B1_28_2'),
+('Dettes et produits constates d\'avance a plus d\'un an','','RN_B1_29_1','RN_B1_29_2');
+
+--------------------------------------------------------------------------------------------------
+
+CREATE TABLE COMPTE_EXPLOITATION1(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+LIBELLE VARCHAR(50) NOT NULL,
+FRANCE VARCHAR(20),
+Exercice_N_Expor VARCHAR(20),
+Total VARCHAR(20) NOT NULL,
+Exercice_precedent_N_1 VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+
+INSERT INTO COMPTE_EXPLOITATION1(LIBELLE,FRANCE,Exercice_N_Expor,Total,Exercice_precedent_N_1)VALUES
+('Ventes d\'origine vegetale','RN_C1_1_1','RN_C1_1_2','RN_C1_1_3','RN_C1_1_4'),
+('Ventes d\'origine animale','RN_C1_2_1','RN_C1_2_2','RN_C1_2_3','RN_C1_2_4'),
+('Ventes de produits transformes','RN_C1_3_1','RN_C1_3_2','RN_C1_3_3','RN_C1_3_4'),
+('Ventes d\'animale\(1\)','RN_C1_4_1','RN_C1_4_2','RN_C1_4_3','RN_C1_4_4'),
+('Autre production vendue\(2\)','RN_C1_5_1','RN_C1_5_2','RN_C1_5_3','RN_C1_5_4'),
+('Montant net du chiffre d\'affaires','RN_ZCL_54','RN_ZCL_55','RN_ZCL_56','RN_ZCL_57');
+
+---------------------------------------------------------------------------------------------------
+
+CREATE TABLE COMPTE_EXPLOITATION2(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+LIBELLE VARCHAR(100) NOT NULL,
+Total VARCHAR(20) NOT NULL,
+Exercice_precedent_N_1 VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO COMPTE_EXPLOITATION2(LIBELLE,Total,Exercice_precedent_N_1)VALUES
+('Variation d\'inventaire : animaux reproducteurs immobilise','RN_C2_1_1','RN_C2_1_2'),
+('Variation d\'inventaire de la production stockee','RN_C2_2_1','RN_C2_2_1'),
+('Production immobilisee','RN_C2_3_1','RN_C2_3_2'),
+('Production autoconsommee','RN_C2_4_1','RN_C2_4_2'),
+('Indemnites et subvention d\'exploitation\(3\)','RN_C2_5_1','RN_C2_5_2'),
+('Reprises sur provisions et amortissements\,transfert de charges','RN_C2_6_1','RN_C2_6_2'),
+('Autres produit\(4\)','RN_C2_7_1','RN_C2_7_2'),
+('Total des produits d\'exploitation\(5\)\(I\)','RN_ZCL_58','RN_ZCL_59'),
+('Achat de marchandises et d\'approvisionnement\(y compris droits de douane\)','RN_C3_1_1','RN_C3_1_2'),
+('Variation de stock\(marchandises et approvisionnements\)','RN_C3_2_1','RN_C3_2_2'),
+('Achats d\'animaux\(y compris droits de douane\)','RN_C3_3_1','RN_C3_3_2'),
+('Autres achata et charges externes\(6\)','RN_C3_4_1','RN_C3_4_2'),
+('Impot\,taxes et versements assimiles','RN_C3_5_1','RN_C3_5_2'),
+('Remunerations\(7\)','RN_C3_6_1','RN_C3_6_2'),
+('Cotisations sociales personnelles de l\'exploitant','RN_C3_7_1','RN_C3_7_2'),
+('Autres charges sociales','RN_C3_8_1','RN_C3_8_2'),
+('Sur immobilisations:dotation aux amortissements','RN_C3_9_1','RN_C3_9_2'),
+('Sur immobilisations:dotation aux provisions','RN_C3_10_1','RN_C3_10_2'),
+('Sur actif circulant:dotations aux provisions','RN_C3_11_1','RN_C3_11_2'),
+('Pour risques et charges:dotations aux provisions','RN_C3_12_1','RN_C3_12_2'),
+('Autre charge\(8\)','RN_C3_13_1','RN_C3_13_2'),
+('Total des charges d\'exploitation\(9\)\(II\)','RN_ZCL_60','RN_ZCL_61'),
+('1 RESULTAT D\'EXPLOITATION(I_II)\(III\)','RN_ZCL_62','RN_ZCL_63'),
+('Produits financiers de participations','RN_C4_1_1','RN_C4_1_2'),
+('Produits d\'autre valeurs mobilieres et creances de l\'actif immobilise','RN_C4_2_1','RN_C4_2_2'),
+('Autre interets\,produit assimiles et differences positives de charge\(10\)','RN_C4_3_1','RN_C4_3_2'),
+('Reprises sur provisions et transferts de charges','RN_C4_4_1','RN_C4_4_2'),
+('Produits nets sur cessions de valeurs mobiliere de placement','RN_C4_5_1','RN_C4_5_2'),
+('Total des produits financiers\(IV\)','RN_ZCL_64','RN_ZCL_65'),
+('Dotations financiere aux amortissements et provisions','RN_C5_1_1','RN_C5_1_2'),
+('Interet\,charges assimilees et differences negatives de charge\(II\)','RN_C5_2_1','RN_C5_2_2'),
+('Charges nettes sur cessions de valeurs mobilieres de placement','RN_C5_3_1','RN_C5_3_2'),
+('Total des charges financieres\(V\)','RN_ZCL_66','RN_ZCL_67'),
+('2 RESULTAT FINANCIER\(IV_V\)\(VI\)','RN_ZCL_68','RN_ZCL_69');
+
+-------------------------------------------------------------------------------------------------
+
+CREATE TABLE COMPTE_EXPLOITATION3(
+ID INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+LIBELLE VARCHAR(100),
+Exercice_N VARCHAR(20) NOT NULL,
+Exercice_N_1 VARCHAR(20) NOT NULL,
+PRIMARY KEY(ID)
+)TYPE=MYISAM;
+
+INSERT INTO COMPTE_EXPLOITATION3(LIBELLE,Exercice_N,Exercice_N_1)VALUES
+('Produits exceptionnel sur operations de gestion','RN_D1_1_1','RN_D1_1_2'),
+('Produits des cessiond d\'elements d\'actif','RN_D1_2_1','RN_D1_2_2'),
+('Autres produits exceptionnels sur operations en capital','RN_D1_3_1','RN_D1_3_2'),
+('Reprises sur provisions et transferts de charges','RN_D1_4_1','RN_D1_4_2'),
+('Total des produits d\'exploitation\(12\)\(VII\)','RN_ZCL_70','RN_ZCL_71'),
+('Charges exceptionnelles sur operations de gestion','RN_D1_5_1','RN_D1_5_2'),
+('Valeurs comptables des element d\'actif cedes','RN_D1_6_1','RN_D1_6_2'),
+('Autres charges exceptionnelles sur operations en capital','RN_D1_7_1','RN_D1_7_2'),
+('Dotation aux amortissements et aux provisions','RN_D1_8_1','RN_D1_8_2'),
+('Total des charges d\'exploitation\(12\)\(VIII\)','RN_ZCL_72','RN_ZCL_73'),
+('3 RESULTAT EXCEPTIONNEL\(VII-VIII\)\(IX\)','RN_ZCL_74','RN_ZCL_75'),
+('Participation des salaries aux resultat de l\'entreprise\(X\)','RN_D1_9_1','RN_D1_9_2'),
+('TOTAL DES PRODUITS\(I+IV+VII\)','RN_ZCL_76','RN_ZCL_77'),
+('TOTAL DES CHARGES\(II+V+VIII+X\)','RN_ZCL_78','RN_ZCL_79'),
+('4 BENEFICE OU PERTE\(Total des produits-Total des charges\)','RN_ZCL_80','RN_ZCL_81'),
+('Dont produit de cessions d\'animaux reproducteurs','RN_D1_10_1','RN_D1_10_2'),
+('Dont operations de nature commerciale ou non commerciale','RN_D1_11_1','RN_D1_11_2'),
+('Dont rembouresement forfaitaire TVA','RN_D1_12_1','RN_D1_12_2'),
+('Dont quotes-parts de benefice sur operations faites en commun','RN_D1_13_1','RN_D1_13_2'),
+('Dont produits d\'exploitation afferents a des exercices anterieurs\(a detailler au\(13\)ci-dessous\)','RN_D1_14_1','RN_D1_14_2'),
+('Dont valeur comptable des animaux reprogucteurs cedes','RN_D1_15_1','RN_D1_15_2'),
+('Dont remuneration du travail de\(ou des\)l\exploitation\(s\)','RN_D1_16_1','RN_D1_16_2'),
+('Dont quotes-parts de perte sur operations faites en commun','RN_D1_17_1','RN_D1_17_2'),
+('Dont charges d\'exploitation afferents a des exercices anterieurs\(a detailler au\(13\)ci-dessous\)','RN_D1_18_1','RN_D1_18_2'),
+('Dont differences positives de change','RN_D1_19_1','RN_D1_19_2'),
+('Dont differences negatives de change','RN_D1_20_1','RN_D1_20_2'),
+('Detail des produits et charge exceptionnels\(si ce cadre est insuffisant\,joindre un etat du meme modele\)','Exercice N','Exercice N'),
+('','Charges exceptionnelles','Produits exceptionnels'),
+('RN_D1_21_1','RN_D1_21_1','RN_D1_21_3'),
+('RN_D1_22_1','RN_D1_22_1','RN_D1_22_3'),
+('RN_D1_23_1','RN_D1_23_1','RN_D1_23_3'),
+('RN_D1_24_1','RN_D1_24_1','RN_D1_24_3'),
+('RN_D1_25_1','RN_D1_25_1','RN_D1_25_3'),
+('RN_D1_26_1','RN_D1_26_1','RN_D1_26_3'),
+('Detail des produits et charge anterieurs\(si ce cadre est insuffisant\,joindre un etat du meme modele\)','Exercice N','Exercice N'),
+('','Charges anterieurs','Produits anterieurs'),
+('RN_D1_27_1','RN_D1_27_1','RN_D1_27_3'),
+('RN_D1_28_1','RN_D1_28_1','RN_D1_28_3'),
+('RN_D1_29_1','RN_D1_29_1','RN_D1_29_3'),
+('RN_D1_30_1','RN_D1_30_1','RN_D1_30_3'),
+('RN_D1_31_1','RN_D1_31_1','RN_D1_31_3');
